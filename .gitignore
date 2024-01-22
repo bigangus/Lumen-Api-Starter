@@ -1,6 +1,13 @@
 /vendor
 /.idea
+/.vscode
 Homestead.json
 Homestead.yaml
 .env
 .phpunit.result.cache
+.DS_Store
+_ide_helper.php
+_ide_helper_models.php
+.phpstorm.meta.php
+.user.ini
+/storage/debugbar
