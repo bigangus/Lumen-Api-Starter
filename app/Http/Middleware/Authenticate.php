@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Http\Responses\Facade\HttpResponse;
 use Closure;
 use Illuminate\Contracts\Auth\Factory as Auth;
 use Illuminate\Http\Request;
@@ -37,7 +38,7 @@ class Authenticate
     public function handle(Request $request, Closure $next, string $guard = null): mixed
     {
         if ($this->auth->guard($guard)->guest()) {
-            return response('Unauthorized.', 401);
+            return HttpResponse::error('Unauthorized', [], 401);
         }
 
         return $next($request);

@@ -2,16 +2,20 @@
 
 namespace App\Exceptions;
 
+use App\Http\Responses\Facade\HttpResponse;
 use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 use Laravel\Lumen\Exceptions\Handler as ExceptionHandler;
+use phpDocumentor\Reflection\Types\Parent_;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -48,12 +52,18 @@ class Handler extends ExceptionHandler
      *
      * @param Request $request
      * @param Throwable $e
-     * @return Response|JsonResponse
+     * @return \App\Http\Responses\HttpResponse
      *
      * @throws Throwable
      */
-    public function render($request, Throwable $e): Response|JsonResponse
+    public function render($request, Throwable $e): \App\Http\Responses\HttpResponse
     {
-        return parent::render($request, $e);
+        if ($e instanceof ModelNotFoundException) {
+            $e = new NotFoundHttpException($e->getMessage(), $e);
+        } elseif ($e instanceof AuthorizationException) {
+            $e = new HttpException($e->status() ?? 403, $e->getMessage());
+        }
+
+        return HttpResponse::error($e->getMessage(), $this->convertExceptionToArray($e), $e->getStatusCode());
     }
 }
