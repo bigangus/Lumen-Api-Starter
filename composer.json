@@ -9,6 +9,7 @@
         "illuminate/redis": "^10.41",
         "laravel/lumen-framework": "^10.0",
         "league/flysystem": "^3.23",
+        "predis/predis": "^2.2",
         "tymon/jwt-auth": "^2.0"
     },
     "require-dev": {
