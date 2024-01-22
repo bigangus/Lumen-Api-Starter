@@ -2,26 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\JsonResponse;
+use App\Http\Responses\Facade\HttpResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
     public function __construct()
     {
-        //
+        $this->middleware('auth:api', ['except' => ['login', 'refresh', 'logout']]);
     }
 
     /**
      * @throws ValidationException
      */
-    public function login(Request $request): JsonResponse
+    public function login(Request $request): \App\Http\Responses\HttpResponse
     {
         $this->validate($request, [
             'username' => 'required|string',
@@ -31,20 +26,23 @@ class AuthController extends Controller
         $credentials = $request->only(['username', 'password']);
 
         if (!$token = auth()->attempt($credentials)) {
-            throw ValidationException::withMessages([
-                'username' => ['The provided credentials are incorrect.']
-            ]);
+            return HttpResponse::error('The provided credentials are incorrect', [], 401);
         }
 
-        return response()->json([
-            'token' => $token
-        ]);
+        return HttpResponse::success('Login successfully', ['token' => $token]);
     }
 
-    public function logout(): JsonResponse
+    public function logout(): \App\Http\Responses\HttpResponse
     {
         auth()->logout();
 
-        return response()->json(['message' => 'Successfully logged out']);
+        return HttpResponse::success('Successfully logged out');
+    }
+
+    public function me(): \App\Http\Responses\HttpResponse
+    {
+        return HttpResponse::success('Success', [
+           'user' => auth()->user()
+        ]);
     }
 }
