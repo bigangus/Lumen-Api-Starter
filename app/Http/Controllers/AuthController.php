@@ -4,13 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Http\Responses\Facade\HttpResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login', 'refresh', 'logout']]);
+        $this->middleware('auth:api', ['except' => ['login']]);
     }
 
     /**
@@ -25,16 +26,18 @@ class AuthController extends Controller
 
         $credentials = $request->only(['username', 'password']);
 
-        if (!$token = auth()->attempt($credentials)) {
+        if (!$token = Auth::attempt($credentials)) {
             return HttpResponse::error('The provided credentials are incorrect', [], 401);
         }
 
-        return HttpResponse::success('Login successfully', ['token' => $token]);
+        return HttpResponse::success('Login successfully', [
+            'token' => $token
+        ]);
     }
 
     public function logout(): \App\Http\Responses\HttpResponse
     {
-        auth()->logout();
+        Auth::logout();
 
         return HttpResponse::success('Successfully logged out');
     }
@@ -42,7 +45,7 @@ class AuthController extends Controller
     public function me(): \App\Http\Responses\HttpResponse
     {
         return HttpResponse::success('Success', [
-           'user' => auth()->user()
+           'user' => Auth::user()
         ]);
     }
 }

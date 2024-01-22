@@ -10,6 +10,7 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 use Laravel\Lumen\Exceptions\Handler as ExceptionHandler;
@@ -58,12 +59,18 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $e): \App\Http\Responses\HttpResponse
     {
+        $code = 500;
+
         if ($e instanceof ModelNotFoundException) {
             $e = new NotFoundHttpException($e->getMessage(), $e);
         } elseif ($e instanceof AuthorizationException) {
             $e = new HttpException($e->status() ?? 403, $e->getMessage());
         }
 
-        return HttpResponse::error($e->getMessage(), $this->convertExceptionToArray($e), $e->getStatusCode());
+        if (method_exists($e, 'getStatusCode')){
+            $code = $e->getStatusCode();
+        }
+
+        return HttpResponse::error($e->getMessage(), App::isLocal() ? $this->convertExceptionToArray($e) : [], $code);
     }
 }
