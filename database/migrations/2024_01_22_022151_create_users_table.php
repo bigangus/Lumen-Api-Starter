@@ -13,8 +13,18 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
+            $table->string('username')->unique();
+            $table->string('email')->nullable()->unique();
+            $table->string('phone')->nullable()->unique();
+            $table->string('password');
+            $table->rememberToken();
             $table->timestamps();
         });
+
+        \App\Models\User::create([
+            'username' => 'admin',
+            'password' => \Illuminate\Support\Facades\Hash::make('admin')
+        ]);
     }
 
     /**

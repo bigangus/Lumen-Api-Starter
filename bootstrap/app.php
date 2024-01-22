@@ -95,6 +95,7 @@ $app->register(App\Providers\AppServiceProvider::class);
 $app->register(App\Providers\AuthServiceProvider::class);
 $app->register(App\Providers\EventServiceProvider::class);
 $app->register(Illuminate\Redis\RedisServiceProvider::class);
+$app->register(Tymon\JWTAuth\Providers\LumenServiceProvider::class);
 
 if ($app->environment() == 'local') {
     $app->register(\Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
