@@ -21,8 +21,7 @@ class AuthController extends Controller
     {
         $this->validate($request, [
             'username' => 'required|string',
-            'password' => 'required|string',
-            'ttl' => 'nullable|integer'
+            'password' => 'required|string'
         ]);
 
         $credentials = $request->only(['username', 'password']);
