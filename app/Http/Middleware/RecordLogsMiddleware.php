@@ -19,6 +19,7 @@ class RecordLogsMiddleware
     {
         $response = $next($request);
 
+        // TODO
         $data = [
             'Request Method' => $request->method(),
             'Request Path' => $request->path(),

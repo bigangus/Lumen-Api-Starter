@@ -73,12 +73,12 @@ $app->configure('app');
 */
 
  $app->middleware([
-//     App\Http\Middleware\RecordLogsMiddleware::class
+     App\Http\Middleware\LocaleSwitcher::class,
+     App\Http\Middleware\RecordLogsMiddleware::class,
  ]);
 
 $app->routeMiddleware([
-    'auth' => App\Http\Middleware\Authenticate::class,
-    'log' => App\Http\Middleware\RecordLogsMiddleware::class
+    'auth' => App\Http\Middleware\Authenticate::class
 ]);
 
 /*

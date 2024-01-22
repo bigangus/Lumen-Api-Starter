@@ -39,7 +39,7 @@ class HttpResponse implements JsonSerializable
         return [
             'code' => $this->code,
             'status' => $this->status,
-            'message' => $this->message,
+            'message' => __($this->message),
             'data' => $this->data
         ];
     }
