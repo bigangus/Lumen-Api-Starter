@@ -61,16 +61,21 @@ class Handler extends ExceptionHandler
     {
         $code = 500;
 
+        $data = App::isLocal() ? $this->convertExceptionToArray($e) : [];
+
         if ($e instanceof ModelNotFoundException) {
             $e = new NotFoundHttpException($e->getMessage(), $e);
         } elseif ($e instanceof AuthorizationException) {
             $e = new HttpException($e->status() ?? 403, $e->getMessage());
+        } elseif ($e instanceof ValidationException && $e->getResponse()) {
+            $code = $e->getResponse()->getStatusCode();
+            $data = json_decode($e->getResponse()->getContent(), true);
         }
 
         if (method_exists($e, 'getStatusCode')){
             $code = $e->getStatusCode();
         }
 
-        return HttpResponse::error($e->getMessage(), App::isLocal() ? $this->convertExceptionToArray($e) : [], $code);
+        return HttpResponse::error($e->getMessage(), $data, $code);
     }
 }
