@@ -11,7 +11,8 @@ class UserController extends Controller
     public function me(): Response
     {
         return HttpResponse::success('Success', [
-            'user' => Auth::user()->setRelation('roles', Auth::user()->roles->pluck('name'))
+            'user' => Auth::user()
+                ->setRelation('roles', Auth::user()->roles->pluck('name'))
         ]);
     }
 
