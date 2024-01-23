@@ -27,6 +27,10 @@ class GeneratePermissions extends Command
             'name' => 'Basic'
         ]);
 
+        Artisan::call(CreateRole::class, [
+            'name' => 'Super Admin'
+        ]);
+
         $routeCollection = Route::getRoutes();
 
         foreach ($routeCollection as $route) {
@@ -34,6 +38,8 @@ class GeneratePermissions extends Command
                 'name' => $route['uri']
             ]);
         }
+
+        Role::findByName('Super Admin')->syncPermissions(Permission::all());
 
         $basicPermissions = config('permission.basic');
 
