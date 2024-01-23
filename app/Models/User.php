@@ -15,7 +15,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     use Authenticatable, Authorizable, HasFactory;
 
     protected $guarded = [
-        'created_at', 'updated_at'
+        'id', 'created_at', 'updated_at'
     ];
 
     protected $hidden = [
