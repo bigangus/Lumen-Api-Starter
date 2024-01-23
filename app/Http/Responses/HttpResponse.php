@@ -10,6 +10,7 @@ class HttpResponse implements JsonSerializable
     public bool $status;
     public string $message;
     public array $data;
+    public string $ticket;
 
     public function __construct(bool $status = true, int $code = 200, string $message = 'success', array $data = [])
     {
@@ -17,6 +18,7 @@ class HttpResponse implements JsonSerializable
         $this->status = $status;
         $this->message = $message;
         $this->data = $data;
+        $this->ticket = hexdec(uniqid());
     }
 
     public function success(string $message, array $data = []): Response
@@ -41,7 +43,8 @@ class HttpResponse implements JsonSerializable
             'code' => $this->code,
             'status' => $this->status,
             'message' => __($this->message),
-            'data' => $this->data
+            'data' => $this->data,
+            'ticket' => $this->ticket
         ];
     }
 }

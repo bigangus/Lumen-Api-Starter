@@ -21,7 +21,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        \App\Models\User::newQuery()->create([
+        \App\Models\User::query()->create([
             'username' => 'admin',
             'password' => \Illuminate\Support\Facades\Hash::make('admin')
         ]);

@@ -2,9 +2,14 @@
 
 namespace App\Http\Middleware;
 
+use App\Jobs\RecordRequestLogJob;
+use App\Models\RequestLog;
+use Carbon\Carbon;
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Queue;
 
 class RecordLogsMiddleware
 {
@@ -13,21 +18,26 @@ class RecordLogsMiddleware
      *
      * @param Request $request
      * @param Closure $next
-     * @return mixed
+     * @return Response
      */
-    public function handle(Request $request, Closure $next): mixed
+    public function handle(Request $request, Closure $next): Response
     {
+        /* @var Response $response */
         $response = $next($request);
 
-        // TODO
-        $data = [
-            'Request Method' => $request->method(),
-            'Request Path' => $request->path(),
-            'Requesting User' => Auth::user() ? Auth::user()->username : 'guest',
-            'Request Params' => $request->all(),
-            'Request IP' => $request->ip(),
-            'Origin' => $request->header('host'),
+        $logData = [
+            'user_id' => Auth::user() ? Auth::user()->id : null,
+            'ticket' => $response->getOriginalContent()->ticket,
+            'method' => $request->method(),
+            'path' => $request->path(),
+            'ip' => $request->ip(),
+            'origin' => $request->header('host'),
+            'request' => json_encode($request->all()),
+            'response' => $response->getContent(),
+            'time' => Carbon::now()
         ];
+
+        Queue::push(new RecordRequestLogJob($logData));
 
         return $response;
     }

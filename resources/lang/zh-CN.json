@@ -48,5 +48,8 @@
     "CSV": "CSV",
     "PDF": "PDF",
     "The provided credentials are incorrect": "账号密码错误",
-    "(and :count more error)": "(还有:count处错误)"
+    "(and :count more error)": "(还有:count处错误)",
+    "Login successfully": "登录成功",
+    "Success": "成功",
+    "Unauthorized": "未登录"
 }
