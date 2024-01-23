@@ -63,6 +63,10 @@ $app->configure('app');
 
 $app->configure('queue');
 
+$app->configure('permission');
+
+$app->alias('cache', \Illuminate\Cache\CacheManager::class);
+
 /*
 |--------------------------------------------------------------------------
 | Register Middleware
@@ -80,7 +84,9 @@ $app->configure('queue');
  ]);
 
 $app->routeMiddleware([
-    'auth' => App\Http\Middleware\Authenticate::class
+    'auth' => App\Http\Middleware\Authenticate::class,
+    'permission' => Spatie\Permission\Middleware\PermissionMiddleware::class,
+    'role'       => Spatie\Permission\Middleware\RoleMiddleware::class,
 ]);
 
 /*
@@ -99,6 +105,7 @@ $app->register(App\Providers\AuthServiceProvider::class);
 $app->register(App\Providers\EventServiceProvider::class);
 $app->register(Illuminate\Redis\RedisServiceProvider::class);
 $app->register(Tymon\JWTAuth\Providers\LumenServiceProvider::class);
+$app->register(Spatie\Permission\PermissionServiceProvider::class);
 
 if ($app->environment() == 'local') {
     $app->register(\Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
