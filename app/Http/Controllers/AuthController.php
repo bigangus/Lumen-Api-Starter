@@ -12,6 +12,7 @@ class AuthController extends Controller
 {
     public function __construct()
     {
+        parent::__construct();
         $this->middleware('auth:api', ['except' => ['login']]);
     }
 
@@ -41,12 +42,5 @@ class AuthController extends Controller
         Auth::logout();
 
         return HttpResponse::success('Successfully logged out');
-    }
-
-    public function me(): Response
-    {
-        return HttpResponse::success('Success', [
-           'user' => Auth::user()
-        ]);
     }
 }
