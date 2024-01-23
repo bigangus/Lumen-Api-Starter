@@ -27,8 +27,6 @@ $app->withFacades();
 
 $app->withEloquent();
 
-$app->configure('queue');
-
 /*
 |--------------------------------------------------------------------------
 | Register Container Bindings
@@ -62,6 +60,8 @@ $app->singleton(
 */
 
 $app->configure('app');
+
+$app->configure('queue');
 
 /*
 |--------------------------------------------------------------------------
