@@ -110,7 +110,6 @@ $app->register(Spatie\Permission\PermissionServiceProvider::class);
 if ($app->environment() == 'local') {
     $app->register(\Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
 }
-
 /*
 |--------------------------------------------------------------------------
 | Load The Application Routes
