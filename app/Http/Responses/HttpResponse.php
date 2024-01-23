@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Responses;
+use Illuminate\Http\Response;
 use JsonSerializable;
 
 class HttpResponse implements JsonSerializable
@@ -18,20 +19,20 @@ class HttpResponse implements JsonSerializable
         $this->data = $data;
     }
 
-    public function success(string $message, array $data = []): static
+    public function success(string $message, array $data = []): Response
     {
         $this->message = $message;
         $this->data = $data;
-        return $this;
+        return response($this, 200);
     }
 
-    public function error(string $message, array $data = [], int $code = 500): static
+    public function error(string $message, array $data = [], int $code = 500): Response
     {
         $this->status = false;
         $this->message = $message;
         $this->data = $data;
         $this->code = $code;
-        return $this;
+        return response($this, $code);
     }
 
     public function jsonSerialize(): array

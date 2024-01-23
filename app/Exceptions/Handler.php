@@ -53,11 +53,10 @@ class Handler extends ExceptionHandler
      *
      * @param Request $request
      * @param Throwable $e
-     * @return \App\Http\Responses\HttpResponse
      *
-     * @throws Throwable
+     * @return Response
      */
-    public function render($request, Throwable $e): \App\Http\Responses\HttpResponse
+    public function render($request, Throwable $e): Response
     {
         $code = 500;
 
