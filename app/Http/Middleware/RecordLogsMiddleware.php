@@ -3,7 +3,6 @@
 namespace App\Http\Middleware;
 
 use App\Jobs\RecordRequestLogJob;
-use App\Models\RequestLog;
 use Carbon\Carbon;
 use Closure;
 use Illuminate\Http\Request;

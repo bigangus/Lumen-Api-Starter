@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Responses;
+
 use Illuminate\Http\Response;
 use JsonSerializable;
 

@@ -6,15 +6,11 @@ use App\Http\Responses\Facade\HttpResponse;
 use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 use Laravel\Lumen\Exceptions\Handler as ExceptionHandler;
-use phpDocumentor\Reflection\Types\Parent_;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
@@ -71,7 +67,7 @@ class Handler extends ExceptionHandler
             $data = json_decode($e->getResponse()->getContent(), true);
         }
 
-        if (method_exists($e, 'getStatusCode')){
+        if (method_exists($e, 'getStatusCode')) {
             $code = $e->getStatusCode();
         }
 

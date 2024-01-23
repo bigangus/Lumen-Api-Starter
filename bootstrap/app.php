@@ -1,5 +1,8 @@
 <?php
 
+use Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider;
+use Illuminate\Cache\CacheManager;
+
 require_once __DIR__ . '/../vendor/autoload.php';
 
 (new Laravel\Lumen\Bootstrap\LoadEnvironmentVariables(
@@ -65,7 +68,7 @@ $app->configure('queue');
 
 $app->configure('permission');
 
-$app->alias('cache', \Illuminate\Cache\CacheManager::class);
+$app->alias('cache', CacheManager::class);
 
 /*
 |--------------------------------------------------------------------------
@@ -78,15 +81,15 @@ $app->alias('cache', \Illuminate\Cache\CacheManager::class);
 |
 */
 
- $app->middleware([
-     App\Http\Middleware\LocaleSwitcher::class,
-     App\Http\Middleware\RecordLogsMiddleware::class,
- ]);
+$app->middleware([
+    App\Http\Middleware\LocaleSwitcher::class,
+    App\Http\Middleware\RecordLogsMiddleware::class,
+]);
 
 $app->routeMiddleware([
     'auth' => App\Http\Middleware\Authenticate::class,
     'permission' => Spatie\Permission\Middlewares\PermissionMiddleware::class,
-    'role'       => Spatie\Permission\Middlewares\RoleMiddleware::class,
+    'role' => Spatie\Permission\Middlewares\RoleMiddleware::class,
 ]);
 
 /*
@@ -108,7 +111,7 @@ $app->register(Tymon\JWTAuth\Providers\LumenServiceProvider::class);
 $app->register(Spatie\Permission\PermissionServiceProvider::class);
 
 if ($app->environment() == 'local') {
-    $app->register(\Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
+    $app->register(IdeHelperServiceProvider::class);
 }
 /*
 |--------------------------------------------------------------------------

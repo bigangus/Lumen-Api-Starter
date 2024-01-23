@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Barryvdh\LaravelIdeHelper\Eloquent;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
@@ -24,6 +23,15 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         'password',
     ];
 
+    public static function boot(): void
+    {
+        parent::boot();
+
+        static::created(function (User $user) {
+            $user->assignRole('Basic');
+        });
+    }
+
     public function getJWTIdentifier()
     {
         return $this->getKey();
@@ -32,15 +40,6 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     public function getJWTCustomClaims(): array
     {
         return [];
-    }
-
-    public static function boot(): void
-    {
-        parent::boot();
-
-        static::created(function (User $user) {
-            $user->assignRole('Basic');
-        });
     }
 
     public function isDisabled(): bool
