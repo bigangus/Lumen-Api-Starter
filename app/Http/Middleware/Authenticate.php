@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Http\Responses\Facade\HttpResponse;
+use App\Models\User;
 use Closure;
 use Illuminate\Contracts\Auth\Factory as Auth;
 use Illuminate\Http\Request;
@@ -41,7 +42,14 @@ class Authenticate
             return HttpResponse::error('Unauthorized', [], 401);
         }
 
-        if (!\Illuminate\Support\Facades\Auth::user()->hasPermissionTo($request->getRequestUri())) {
+        /* @var User $user */
+        $user = auth()->user();
+
+        if ($user->isDisabled()) {
+            return HttpResponse::error('Your account has been disabled', [], 403);
+        }
+
+        if (!$user->hasPermissionTo($request->getRequestUri())) {
             return HttpResponse::error('Not allowed to access this route', [], 403);
         }
 

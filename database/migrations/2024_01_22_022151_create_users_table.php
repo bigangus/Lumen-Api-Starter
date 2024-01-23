@@ -19,19 +19,9 @@ return new class extends Migration
             $table->string('email')->nullable()->unique();
             $table->string('phone')->nullable()->unique();
             $table->string('password');
+            $table->boolean('status')->default(true);
             $table->timestamps();
         });
-
-        $user = \App\Models\User::query()->create([
-            'username' => 'admin',
-            'password' => \Illuminate\Support\Facades\Hash::make('admin')
-        ]);
-
-        Artisan::call(CreateRole::class, [
-            'name' => 'Basic'
-        ]);
-
-        $user->assignRole('Basic');
     }
 
     /**
