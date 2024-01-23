@@ -2,7 +2,9 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Schema;
+use Spatie\Permission\Commands\CreateRole;
 
 return new class extends Migration
 {
@@ -20,10 +22,16 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        \App\Models\User::query()->create([
+        $user = \App\Models\User::query()->create([
             'username' => 'admin',
             'password' => \Illuminate\Support\Facades\Hash::make('admin')
         ]);
+
+        Artisan::call(CreateRole::class, [
+            'name' => 'Basic'
+        ]);
+
+        $user->assignRole('Basic');
     }
 
     /**

@@ -183,4 +183,10 @@ return [
 
         'store' => 'default',
     ],
+
+    'basic' => [
+        '/api/auth/login',
+        '/api/auth/logout',
+        '/api/user/me'
+    ]
 ];
