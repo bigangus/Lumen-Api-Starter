@@ -85,8 +85,8 @@ $app->alias('cache', \Illuminate\Cache\CacheManager::class);
 
 $app->routeMiddleware([
     'auth' => App\Http\Middleware\Authenticate::class,
-    'permission' => Spatie\Permission\Middleware\PermissionMiddleware::class,
-    'role'       => Spatie\Permission\Middleware\RoleMiddleware::class,
+    'permission' => Spatie\Permission\Middlewares\PermissionMiddleware::class,
+    'role'       => Spatie\Permission\Middlewares\RoleMiddleware::class,
 ]);
 
 /*
