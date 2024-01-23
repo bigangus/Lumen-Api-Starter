@@ -40,13 +40,6 @@ class GeneratePermissions extends Command
         }
 
         Role::findByName('Super Admin')->syncPermissions(Permission::all());
-
-        $basicPermissions = config('permission.basic');
-
-        foreach ($basicPermissions as $permission) {
-            if (Permission::findByName($permission)) {
-                Role::findByName('Basic')->givePermissionTo($permission);
-            }
-        }
+        Role::findByName('Basic')->syncPermissions(config('permission.basic'));
     }
 }
