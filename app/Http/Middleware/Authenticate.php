@@ -41,6 +41,10 @@ class Authenticate
             return HttpResponse::error('Unauthorized', [], 401);
         }
 
+        if (!\Illuminate\Support\Facades\Auth::user()->hasPermissionTo($request->getRequestUri())) {
+            return HttpResponse::error('Not allowed to access this route', [], 403);
+        }
+
         return $next($request);
     }
 }
