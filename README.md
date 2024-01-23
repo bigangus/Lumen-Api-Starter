@@ -10,20 +10,21 @@ Laravel Lumen is a stunningly fast PHP micro-framework for building web applicat
 > **Note:** In the years since releasing Lumen, PHP has made a variety of wonderful performance improvements. For this reason, along with the availability of [Laravel Octane](https://laravel.com/docs/octane), we no longer recommend that you begin new projects with Lumen. Instead, we recommend always beginning new projects with [Laravel](https://laravel.com).
 
 ## To Deploy the Application, Run Below Commands
-
+Install dependencies and generate environment file
 ```bash
 composer install
 cp .env.example .env
 ```
-Update the .env file with your database credentials
+Install database tables and generate permissions
 ```bash
 php artisan migrate
 php artisan permissions:generate
 ```
-Create Admin User
+Create admin user
 ```bash
 php artisan user:create
 ```
+Start the queue worker
 ```bash
 php artisan queue:work
 ```
