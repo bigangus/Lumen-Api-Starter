@@ -20,6 +20,10 @@ Install database tables and generate permissions
 php artisan migrate
 php artisan permissions:generate
 ```
+Create JWT secret
+```bash
+php artisan jwt:secret
+```
 Create admin user
 ```bash
 php artisan user:create
