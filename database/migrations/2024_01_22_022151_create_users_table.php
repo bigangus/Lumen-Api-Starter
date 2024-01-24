@@ -20,6 +20,8 @@ return new class extends Migration
             $table->string('phone')->nullable()->unique();
             $table->string('password');
             $table->boolean('status')->default(true);
+            $table->unsignedBigInteger('entity_id')->comment('对应实体');
+            $table->foreign('entity_id')->references('id')->on('entities')->onDelete('cascade');
             $table->timestamps();
         });
     }

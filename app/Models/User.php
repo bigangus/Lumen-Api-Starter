@@ -7,6 +7,7 @@ use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Laravel\Lumen\Auth\Authorizable;
 use Spatie\Permission\Traits\HasRoles;
 use Tymon\JWTAuth\Contracts\JWTSubject;
@@ -50,5 +51,10 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     public function isDisabled(): bool
     {
         return !$this->getAttribute('status');
+    }
+
+    public function entity(): BelongsTo
+    {
+        return $this->belongsTo(Entity::class);
     }
 }

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedInteger('user_id')->nullable();
             $table->string('ticket')->unique();
             $table->string('method');
-            $table->string('path');
+            $table->string('path')->index();
             $table->string('ip');
             $table->string('origin');
             $table->json('request');

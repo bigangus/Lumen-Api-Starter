@@ -7,6 +7,10 @@ $router->group(['prefix' => 'api'], function() use ($router) {
         $router->post('logout', 'AuthController@logout');
     });
 
+    $router->group(['prefix' => 'entity', 'middleware' => ['auth:api']], function () use ($router) {
+        $router->post('list', 'EntityController@list');
+    });
+
     $router->group(['prefix' => 'user', 'middleware' => ['auth:api']], function () use ($router) {
         $router->post('me', 'UserController@me');
         $router->post('create', 'UserController@create');
