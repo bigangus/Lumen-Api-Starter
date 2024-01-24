@@ -24,10 +24,6 @@ class GeneratePermissions extends Command
     public function handle(): void
     {
         Artisan::call(CreateRole::class, [
-            'name' => 'Basic'
-        ]);
-
-        Artisan::call(CreateRole::class, [
             'name' => 'Super Admin'
         ]);
 
@@ -40,6 +36,5 @@ class GeneratePermissions extends Command
         }
 
         Role::findByName('Super Admin')->syncPermissions(Permission::all());
-        Role::findByName('Basic')->syncPermissions(config('permission.basic'));
     }
 }

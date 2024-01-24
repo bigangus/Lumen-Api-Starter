@@ -23,7 +23,7 @@ class CreateUser extends Command
     {
         $username = $this->ask('What is the username', 'admin');
         $password = $this->ask('What is the password', 'admin');
-        $role = $this->choice('What is the role', Role::query()->whereNot('name', 'Basic')->pluck('name')->toArray(), 0);
+        $role = $this->choice('What is the role', Role::query()->pluck('name')->toArray(), 0);
 
         $this->info('Creating user...');
 
@@ -47,13 +47,8 @@ class CreateUser extends Command
             'entity_id' => $entity->getAttribute('id')
         ]);
 
-        if (Role::findByName($role)) {
-            $user->assignRole($role);
-        } else {
-            $this->error('Role not found!');
-        }
+        $user->assignRole($role);
 
         $this->info('User created successfully!');
-
     }
 }

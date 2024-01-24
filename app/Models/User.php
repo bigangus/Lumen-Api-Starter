@@ -29,10 +29,6 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     public static function boot(): void
     {
         parent::boot();
-
-        static::created(function (User $user) {
-            $user->assignRole('Basic');
-        });
     }
 
     public function getJWTIdentifier()

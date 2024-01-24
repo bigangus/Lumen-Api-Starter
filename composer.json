@@ -42,6 +42,11 @@
             "@php artisan ide-helper:generate",
             "@php artisan ide-helper:meta",
             "@php artisan ide-helper:models -n"
+        ],
+        "init-project": [
+            "@php artisan migrate:fresh",
+            "@php artisan permissions:generate",
+            "@php artisan user:create"
         ]
     },
     "config": {
