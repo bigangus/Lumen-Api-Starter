@@ -11,10 +11,10 @@ class UserController extends Controller
     public function me(): Response
     {
         $user = Auth::user()
-            ->setRelation('roles', Auth::user()->roles->pluck('name'))
+//            ->setRelation('roles', Auth::user()->roles->pluck('name'))
             ->toArray();
 
-//        $permissions = Auth::user()->getAllPermissions();
+        $permissions = Auth::user()->getAllPermissions();
 
         return HttpResponse::success('Success', [
             'user' => $user
