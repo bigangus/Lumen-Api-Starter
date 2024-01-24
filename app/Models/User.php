@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Laravel\Lumen\Auth\Authorizable;
+use Spatie\Permission\Traits\HasPermissions;
 use Spatie\Permission\Traits\HasRoles;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
@@ -21,12 +22,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     ];
 
     protected $hidden = [
-        'id', 'password', 'updated_at', 'permissions'
-    ];
-
-    protected $casts = [
-        'status' => 'boolean',
-        'created_at' => 'datetime:Y-m-d H:i:s'
+        'password'
     ];
 
     public static function boot(): void

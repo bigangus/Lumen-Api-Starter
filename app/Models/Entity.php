@@ -16,15 +16,6 @@ class Entity extends Model
 
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
-    protected $hidden = [
-        'updated_at'
-    ];
-
-    protected $casts = [
-        'status' => 'boolean',
-        'created_at' => 'datetime:Y-m-d H:i:s'
-    ];
-
     public function users(): HasMany
     {
         return $this->hasMany(User::class);
