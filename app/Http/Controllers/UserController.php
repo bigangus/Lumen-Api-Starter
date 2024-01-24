@@ -4,20 +4,25 @@ namespace App\Http\Controllers;
 use App\Http\Responses\Facade\HttpResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
     public function me(): Response
     {
-        $user = Auth::user()
-//            ->setRelation('roles', Auth::user()->roles->pluck('name'))
-            ->toArray();
+        $user = Auth::user();
 
-        $permissions = Auth::user()->getAllPermissions();
+        $permissions = $user->getAllPermissions()->pluck('name');
+
+        $result = $user->with('roles', 'entity')->first()->toArray();
+
+        $result['roles'] = Arr::pluck($result['roles'], 'name');
+
+        $result['permissions'] = $permissions;
 
         return HttpResponse::success('Success', [
-            'user' => $user
+            'user' => $result
         ]);
     }
 
