@@ -187,6 +187,7 @@ return [
     'basic' => [
         '/api/auth/login',
         '/api/auth/logout',
-        '/api/user/me'
+        '/api/user/me',
+        '/api/entity/list'
     ]
 ];

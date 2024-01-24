@@ -31,12 +31,16 @@ class AuthController extends Controller
         $credentials = $request->only(['username', 'password']);
         $remember = $request->input('remember', false);
 
-        if (!$token = Auth::attempt($credentials, $remember)) {
+        if (!$token = Auth::attempt($credentials)) {
             return HttpResponse::error('The provided credentials are incorrect', [], 401);
         }
 
+        if (Auth::user()->isDisabled()) {
+            return HttpResponse::error('Your account has been disabled', [], 403);
+        }
+
         if ($remember) {
-            $cookie = Cookie::create('jwt_token', $token, 60 * 24 * 365);
+            $cookie = Cookie::create('jwt_token', $token, time() + (3600 * 720));
             return HttpResponse::success('Login successfully', [
                 'token' => $token
             ])->withCookie($cookie);

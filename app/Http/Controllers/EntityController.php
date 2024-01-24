@@ -17,7 +17,12 @@ class EntityController extends Controller
         $tree = Entity::buildTree($entities->toArray(), Auth::user()->entity->getAttribute('parent_id'));
 
         if ($request->has('id')) {
-            $tree[0] = find_child($tree[0], $request->get('id'));
+            $result = find_child($tree[0], $request->get('id'));
+            if (!is_null($result)) {
+                $tree[0] = $result;
+            } else {
+                $tree = [];
+            }
         }
 
         return HttpResponse::success('Success', [
