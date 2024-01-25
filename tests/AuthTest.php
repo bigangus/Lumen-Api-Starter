@@ -32,6 +32,8 @@ class AuthTest extends TestCase
             self::$user = User::query()->create([
                 'username' => self::$username,
                 'password' => Hash::make(self::$password),
+                'email' => self::$username . '@example.com',
+                'phone' => '0123456789',
                 'entity_id' => self::$entity->id
             ]);
             self::$initialized = TRUE;
@@ -123,7 +125,7 @@ class AuthTest extends TestCase
 
     public function test_login_with_missing_credentials()
     {
-        $this->json('POST', '/api/auth/login', []);
+        $this->json('POST', '/api/auth/login');
 
         $this->seeJson([
             'code' => 422,
@@ -153,7 +155,7 @@ class AuthTest extends TestCase
 
     public function test_login_with_missing_username_and_password()
     {
-        $this->json('POST', '/api/auth/login', []);
+        $this->json('POST', '/api/auth/login');
 
         $this->seeJson([
             'code' => 422,
@@ -198,6 +200,72 @@ class AuthTest extends TestCase
         $this->seeJson([
             'code' => 422,
             'status' => false
+        ]);
+    }
+
+    public function test_login_with_email()
+    {
+        $this->json('POST', '/api/auth/login', ['username' => self::$user->email, 'password' => self::$password]);
+
+        $this->seeJson([
+            'code' => 200,
+            'status' => true
+        ]);
+    }
+
+    public function test_login_with_phone()
+    {
+        $this->json('POST', '/api/auth/login', ['username' => self::$user->phone, 'password' => self::$password]);
+
+        $this->seeJson([
+            'code' => 200,
+            'status' => true
+        ]);
+    }
+
+    public function test_login_with_remember()
+    {
+        $this->json('POST', '/api/auth/login', ['username' => self::$username, 'password' => self::$password, 'remember' => true]);
+
+        $this->seeJson([
+            'code' => 200,
+            'status' => true
+        ]);
+    }
+
+    public function test_login_with_invalid_remember()
+    {
+        $this->json('POST', '/api/auth/login', ['username' => self::$username, 'password' => self::$password, 'remember' => 'invalid']);
+
+        $this->seeJson([
+            'code' => 422,
+            'status' => false
+        ]);
+    }
+
+    public function test_login_with_number_username_and_empty_phone() {
+        self::$user->username = self::$user->phone;
+        self::$user->phone = null;
+        self::$user->save();
+
+        $this->json('POST', '/api/auth/login', ['username' => self::$user->username, 'password' => self::$password]);
+
+        $this->seeJson([
+            'code' => 200,
+            'status' => true
+        ]);
+    }
+
+    public function test_login_with_email_username_and_empty_email() {
+        self::$user->username = self::$user->email;
+        self::$user->email = null;
+        self::$user->save();
+
+        $this->json('POST', '/api/auth/login', ['username' => self::$user->username, 'password' => self::$password]);
+
+        $this->seeJson([
+            'code' => 200,
+            'status' => true
         ]);
     }
 
