@@ -64,6 +64,8 @@ $app->singleton(
 
 $app->configure('app');
 
+$app->configure('session');
+
 $app->configure('queue');
 
 $app->configure('permission');
@@ -73,6 +75,7 @@ $app->configure('tencent');
 $app->configure('settings');
 
 $app->alias('cache', CacheManager::class);
+class_alias('Illuminate\Support\Facades\Session', 'Session');
 
 /*
 |--------------------------------------------------------------------------
@@ -88,6 +91,7 @@ $app->alias('cache', CacheManager::class);
 $app->middleware([
     App\Http\Middleware\LocaleSwitcher::class,
     App\Http\Middleware\RecordLogsMiddleware::class,
+    Illuminate\Session\Middleware\StartSession::class
 ]);
 
 $app->routeMiddleware([
@@ -114,6 +118,7 @@ $app->register(App\Providers\EventServiceProvider::class);
 $app->register(Illuminate\Redis\RedisServiceProvider::class);
 $app->register(Tymon\JWTAuth\Providers\LumenServiceProvider::class);
 $app->register(Spatie\Permission\PermissionServiceProvider::class);
+$app->register(Illuminate\Session\SessionServiceProvider::class);
 
 if ($app->environment() == 'local') {
     $app->register(IdeHelperServiceProvider::class);
