@@ -1,20 +1,32 @@
 <?php
+
 namespace App\Utils;
 
 use TencentCloud\Common\Credential;
 use TencentCloud\Common\Profile\ClientProfile;
 use TencentCloud\Common\Profile\HttpProfile;
-use TencentCloud\Sms\V20210111\SmsClient;
 use TencentCloud\Sms\V20210111\Models\SendSmsRequest;
+use TencentCloud\Sms\V20210111\SmsClient;
 
-class TencentSms
+class TencentApi
 {
+    protected string $endpoint;
+    protected string $secretId;
+    protected string $secretKey;
+
+    public function __construct()
+    {
+        $this->endpoint = config('tencent.endpoint');
+        $this->secretId = config('tencent.secret_id');
+        $this->secretKey = config('tencent.secret_key');
+    }
+
     public function sendSms(array $params): void
     {
-        $cred = new Credential(config('tencent.secret_id'), config('tencent.secret_key'));
+        $cred = new Credential($this->secretId, $this->secretKey);
 
         $httpProfile = new HttpProfile();
-        $httpProfile->setEndpoint(config('tencent.endpoint'));
+        $httpProfile->setEndpoint($this->endpoint);
 
         $clientProfile = new ClientProfile();
         $clientProfile->setHttpProfile($httpProfile);

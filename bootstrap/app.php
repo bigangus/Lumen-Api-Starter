@@ -70,6 +70,8 @@ $app->configure('permission');
 
 $app->configure('tencent');
 
+$app->configure('settings');
+
 $app->alias('cache', CacheManager::class);
 
 /*

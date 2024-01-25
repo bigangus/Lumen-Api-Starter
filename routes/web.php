@@ -5,6 +5,8 @@ $router->group(['prefix' => 'api'], function() use ($router) {
     $router->group(['prefix' => 'auth'], function () use ($router) {
         $router->post('login', 'AuthController@login');
         $router->post('logout', 'AuthController@logout');
+        $router->post('send-sms-code', 'AuthController@sendSmsCode');
+        $router->post('forgot-password', 'AuthController@forgotPassword');
     });
 
     $router->group(['prefix' => 'entity', 'middleware' => ['auth:api', 'acl']], function () use ($router) {

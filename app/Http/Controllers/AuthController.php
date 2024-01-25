@@ -3,9 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Http\Responses\Facade\HttpResponse;
+use App\Jobs\SendVerificationCodeJob;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Queue;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Cookie;
 
@@ -14,7 +18,7 @@ class AuthController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->middleware('auth:api', ['except' => ['login']]);
+        $this->middleware('auth:api', ['only' => ['logout']]);
     }
 
     /**
@@ -56,5 +60,64 @@ class AuthController extends Controller
         Auth::logout();
 
         return HttpResponse::success('Successfully logged out');
+    }
+
+    /**
+     * @throws ValidationException
+     */
+    public function sendSmsCode(Request $request): Response
+    {
+        $this->validate($request, [
+            'phone' => 'required|string',
+        ]);
+
+        $phoneNumber = $request->input('phone');
+
+        $user = User::query()->where('phone', $phoneNumber)->first();
+
+        if (!$user) {
+            return HttpResponse::error('Phone not found', [], 404);
+        }
+
+        $smsCode = rand(100000, 999999);
+
+        Queue::push(new SendVerificationCodeJob($phoneNumber, $smsCode));
+
+        $request->session()->put('sms_code', $smsCode);
+
+        return HttpResponse::success('SMS code sent successfully');
+    }
+
+    /**
+     * @throws ValidationException
+     */
+    public function forgotPassword(Request $request): Response
+    {
+        $this->validate($request, [
+            'phone' => 'required|string',
+            'code' => 'required|string',
+            'password' => 'required|string',
+        ]);
+
+        $phoneNumber = $request->input('phone');
+        $code = $request->input('code');
+        $password = $request->input('password');
+
+        $smsCode = $request->session()->get('sms_code');
+
+        if ($smsCode != $code) {
+            return HttpResponse::error('SMS code is incorrect', [], 400);
+        }
+
+        $user = User::query()->where('phone', $phoneNumber)->first();
+
+        if (!$user) {
+            return HttpResponse::error('User not found', [], 404);
+        }
+
+        $user->password = Hash::make($password);
+        $user->save();
+
+        return HttpResponse::success('Password changed successfully');
     }
 }
