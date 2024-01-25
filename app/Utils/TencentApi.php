@@ -14,9 +14,9 @@ class TencentApi
     protected string $secretId;
     protected string $secretKey;
 
-    public function __construct()
+    public function __construct(string $endpoint)
     {
-        $this->endpoint = config('tencent.endpoint');
+        $this->endpoint = $endpoint;
         $this->secretId = config('tencent.secret_id');
         $this->secretKey = config('tencent.secret_key');
     }

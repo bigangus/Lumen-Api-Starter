@@ -18,7 +18,7 @@ class SendVerificationCodeJob extends Job
     public function handle(): void
     {
         if (config('settings.default_sms_client') == 'tencent') {
-            (new TencentApi())->sendSms([
+            (new TencentApi(config('tencent.sms.endpoint')))->sendSms([
                 'PhoneNumberSet' => [
                     "+86{$this->phone}"
                 ],
