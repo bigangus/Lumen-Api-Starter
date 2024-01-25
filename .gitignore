@@ -11,3 +11,4 @@ _ide_helper_models.php
 .phpstorm.meta.php
 .user.ini
 /storage/debugbar
+/storage/framework/sessions/*
