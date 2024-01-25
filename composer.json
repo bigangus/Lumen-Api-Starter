@@ -11,6 +11,7 @@
         "league/flysystem": "^3.23",
         "predis/predis": "^2.2",
         "spatie/laravel-permission": "^5.11.1",
+        "tencentcloud/sms": "^3.0",
         "tymon/jwt-auth": "^2.0"
     },
     "require-dev": {

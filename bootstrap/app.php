@@ -68,6 +68,8 @@ $app->configure('queue');
 
 $app->configure('permission');
 
+$app->configure('tencent');
+
 $app->alias('cache', CacheManager::class);
 
 /*
