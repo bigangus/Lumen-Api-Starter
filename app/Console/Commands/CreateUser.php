@@ -32,7 +32,7 @@ class CreateUser extends Command
         if ($entities->isEmpty()) {
             $this->info('Creating Super Entity...');
             $entity = Entity::query()->create([
-                'name' => 'Super Entity',
+                'name' => $this->ask('Please create a super entity name', 'Super Entity'),
                 'parent_id' => 0,
                 'status' => true
             ]);

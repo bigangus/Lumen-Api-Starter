@@ -23,9 +23,11 @@ class GeneratePermissions extends Command
 
     public function handle(): void
     {
-        Artisan::call(CreateRole::class, [
-            'name' => 'Super Admin'
-        ]);
+        if (Role::all()->count() == 0) {
+            Artisan::call(CreateRole::class, [
+                'name' => $this->ask('Please create a super admin role name', 'Super Admin')
+            ]);
+        }
 
         $routeCollection = Route::getRoutes();
 
@@ -37,6 +39,6 @@ class GeneratePermissions extends Command
             }
         }
 
-        Role::findByName('Super Admin')->syncPermissions(Permission::all());
+        Role::query()->first()->syncPermissions(Permission::all());
     }
 }
