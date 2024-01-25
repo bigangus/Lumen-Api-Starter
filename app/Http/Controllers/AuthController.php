@@ -32,10 +32,23 @@ class AuthController extends Controller
             'remember' => 'nullable|boolean'
         ]);
 
-        $credentials = $request->only(['username', 'password']);
+        $username = $request->input('username');
+        $credentials = $request->only(['password']);
         $remember = $request->input('remember', false);
 
-        if (!$token = Auth::attempt($credentials)) {
+        $token = Auth::attempt($request->only(['username', 'password']));
+
+        if (!$token) {
+            if (filter_var($username, FILTER_VALIDATE_EMAIL)) {
+                $credentials['email'] = $username;
+            } elseif (preg_match('/^\d+$/', $username)) {
+                $credentials['phone'] = $username;
+            }
+
+            $token = Auth::attempt($credentials);
+        }
+
+        if (!$token) {
             return HttpResponse::error('The provided credentials are incorrect', [], 401);
         }
 
