@@ -11,8 +11,11 @@ $router->group(['prefix' => 'api'], function() use ($router) {
         $router->post('list', 'EntityController@list');
     });
 
-    $router->group(['prefix' => 'user', 'middleware' => ['auth:api', 'acl']], function () use ($router) {
+    $router->group(['prefix' => 'user', 'middleware' => ['auth:api']], function () use ($router) {
         $router->post('me', 'UserController@me');
+    });
+
+    $router->group(['prefix' => 'user', 'middleware' => ['auth:api', 'acl']], function () use ($router) {
         $router->post('create', 'UserController@create');
         $router->post('disable', 'UserController@disable');
         $router->post('update', 'UserController@update');
