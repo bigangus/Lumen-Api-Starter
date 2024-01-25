@@ -15,7 +15,7 @@ class PermissionController extends Controller
                 'name' => $item['name'],
                 'translation' => __($item['name'])
             ];
-        })->whereNotIn('name', config('permission.basic'))->values();
+        });
 
         return HttpResponse::success('Get permissions success', [
             'permissions' => $permissions->toArray()
