@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Responses\Facade\HttpResponse;
 use App\Jobs\SendVerificationCodeJob;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
@@ -68,6 +69,40 @@ class AuthController extends Controller
         ]);
     }
 
+    /**
+     * @throws ValidationException
+     */
+    public function loginWithVerificationCode(Request $request): Response
+    {
+        $this->validate($request, [
+            'phone' => 'required|string',
+            'code' => 'required|string',
+        ]);
+
+        $phoneNumber = $request->input('phone');
+        $code = $request->input('code');
+
+        $user = User::query()->where('phone', $phoneNumber)->first();
+
+        if (!$user) {
+            return HttpResponse::error('User not found', [], 404);
+        }
+
+        $smsCode = $request->session()->get('sms_code');
+
+        if ($smsCode != $code) {
+            return HttpResponse::error('Verification code is incorrect', [], 400);
+        }
+
+        $token = Auth::login($user);
+
+        $request->session()->forget('sms_code');
+
+        return HttpResponse::success('Login successfully', [
+            'token' => $token
+        ]);
+    }
+
     public function logout(): Response
     {
         Auth::logout();
@@ -96,9 +131,9 @@ class AuthController extends Controller
 
         Queue::push(new SendVerificationCodeJob($phoneNumber, $smsCode));
 
-        $request->session()->put('sms_code', $smsCode);
+        $request->session()->put('sms_code', ['value' => $smsCode, 'expires_at' => Carbon::now()->addSeconds(60)]);
 
-        return HttpResponse::success('SMS code sent successfully');
+        return HttpResponse::success('SMS code sent successfully, expires after 60 seconds');
     }
 
     /**
@@ -130,6 +165,8 @@ class AuthController extends Controller
 
         $user->password = Hash::make($password);
         $user->save();
+
+        $request->session()->forget('sms_code');
 
         return HttpResponse::success('Password changed successfully');
     }
