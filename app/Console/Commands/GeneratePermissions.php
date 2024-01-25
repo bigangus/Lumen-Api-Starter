@@ -30,9 +30,11 @@ class GeneratePermissions extends Command
         $routeCollection = Route::getRoutes();
 
         foreach ($routeCollection as $route) {
-            Artisan::call(CreatePermission::class, [
-                'name' => $route['uri']
-            ]);
+            if (isset($route['action']['middleware']) && in_array('acl', $route['action']['middleware'])) {
+                Artisan::call(CreatePermission::class, [
+                    'name' => $route['uri']
+                ]);
+            }
         }
 
         Role::findByName('Super Admin')->syncPermissions(Permission::all());

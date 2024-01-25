@@ -49,14 +49,6 @@ class Authenticate
             return HttpResponse::error('Your account has been disabled', [], 403);
         }
 
-        if (in_array($request->getRequestUri(), ['/api/auth/login', '/api/auth/logout', '/api/user/me'])) {
-            return $next($request);
-        }
-
-        if (!$user->hasPermissionTo($request->getRequestUri())) {
-            return HttpResponse::error('Not allowed to access this route', [], 403);
-        }
-
         return $next($request);
     }
 }
