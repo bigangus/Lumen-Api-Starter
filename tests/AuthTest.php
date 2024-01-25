@@ -243,7 +243,8 @@ class AuthTest extends TestCase
         ]);
     }
 
-    public function test_login_with_number_username_and_empty_phone() {
+    public function test_login_with_number_username_and_empty_phone()
+    {
         self::$user->username = self::$user->phone;
         self::$user->phone = null;
         self::$user->save();
@@ -256,12 +257,64 @@ class AuthTest extends TestCase
         ]);
     }
 
-    public function test_login_with_email_username_and_empty_email() {
+    public function test_login_with_email_username_and_empty_email()
+    {
         self::$user->username = self::$user->email;
         self::$user->email = null;
         self::$user->save();
 
         $this->json('POST', '/api/auth/login', ['username' => self::$user->username, 'password' => self::$password]);
+
+        $this->seeJson([
+            'code' => 200,
+            'status' => true
+        ]);
+    }
+
+    public function test_send_verification_code()
+    {
+        self::$user->phone = '0123456789';
+        self::$user->save();
+
+        $this->json('POST', '/api/auth/send-sms-code', ['phone' => self::$user->phone]);
+
+        $this->seeJson([
+            'code' => 200,
+            'status' => true
+        ]);
+
+        $response = $this->response->json();
+
+        return $response['data']['sms_code'];
+    }
+
+    /**
+     * @depends test_send_verification_code
+     */
+    public function test_forgot_password_works($code)
+    {
+        $newPassword = Str::random(10);
+
+        $this->json('POST', '/api/auth/forgot-password', [
+            'phone' => self::$user->phone,
+            'code' => $code,
+            'password' => $newPassword
+        ]);
+
+        $this->seeJson([
+            'code' => 200,
+            'status' => true
+        ]);
+
+        return $newPassword;
+    }
+
+    /**
+     * @depends test_forgot_password_works
+     */
+    public function test_login_with_new_password($password)
+    {
+        $this->json('POST', '/api/auth/login', ['username' => self::$username, 'password' => $password]);
 
         $this->seeJson([
             'code' => 200,

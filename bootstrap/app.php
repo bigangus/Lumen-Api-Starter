@@ -75,7 +75,6 @@ $app->configure('tencent');
 $app->configure('settings');
 
 $app->alias('cache', CacheManager::class);
-class_alias('Illuminate\Support\Facades\Session', 'Session');
 
 /*
 |--------------------------------------------------------------------------

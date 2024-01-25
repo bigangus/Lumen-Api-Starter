@@ -76,7 +76,7 @@ class AuthController extends Controller
     {
         $this->validate($request, [
             'phone' => 'required|string',
-            'code' => 'required|string',
+            'code' => 'required|integer',
         ]);
 
         $phoneNumber = $request->input('phone');
@@ -88,7 +88,7 @@ class AuthController extends Controller
             return HttpResponse::error('User not found', [], 404);
         }
 
-        $smsCode = $request->session()->get('sms_code');
+        $smsCode = $request->session()->get('sms_code')['value'] ?? null;
 
         if ($smsCode != $code) {
             return HttpResponse::error('Verification code is incorrect', [], 400);
@@ -148,7 +148,7 @@ class AuthController extends Controller
     {
         $this->validate($request, [
             'phone' => 'required|string',
-            'code' => 'required|string',
+            'code' => 'required|integer',
             'password' => 'required|string',
         ]);
 
@@ -156,7 +156,7 @@ class AuthController extends Controller
         $code = $request->input('code');
         $password = $request->input('password');
 
-        $smsCode = $request->session()->get('sms_code');
+        $smsCode = $request->session()->get('sms_code')['value'] ?? null;
 
         if ($smsCode != $code) {
             return HttpResponse::error('SMS code is incorrect', [], 400);
