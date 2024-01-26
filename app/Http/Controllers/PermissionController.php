@@ -16,7 +16,7 @@ class PermissionController extends Controller
         $permissions = Auth::user()->getAllPermissions();
 
         return HttpResponse::success('Get permissions success', [
-            'permissions' => format_permissions($permissions)->toArray()
+            'permissions' => $permissions->toArray()
         ]);
     }
 
@@ -41,7 +41,7 @@ class PermissionController extends Controller
             $user->givePermissionTo($request->input('permissions'));
             return HttpResponse::success('Add permissions success',
                 [
-                    'permissions' => format_permissions($user->getAllPermissions())->toArray()
+                    'permissions' => $user->getAllPermissions()->toArray()
                 ]
             );
         }
@@ -70,7 +70,7 @@ class PermissionController extends Controller
             $user->revokePermissionTo($request->input('permissions'));
             return HttpResponse::success('Remove permissions success',
                 [
-                    'permissions' => format_permissions($user->getAllPermissions())->toArray()
+                    'permissions' => $user->getAllPermissions()->toArray()
                 ]
             );
         }
@@ -97,7 +97,7 @@ class PermissionController extends Controller
             $permissions = $user->getAllPermissions();
 
             return HttpResponse::success('Get permissions success', [
-                'permissions' => format_permissions($permissions)->toArray()
+                'permissions' => $permissions->toArray()
             ]);
         }
 
