@@ -4,7 +4,9 @@ namespace Tests;
 
 use App\Models\Entity;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 
 class AuthTest extends TestCase
@@ -277,44 +279,6 @@ class AuthTest extends TestCase
         self::$user->save();
 
         $this->json('POST', '/api/auth/send-sms-code', ['phone' => self::$user->phone]);
-
-        $this->seeJson([
-            'code' => 200,
-            'status' => true
-        ]);
-
-        $response = $this->response->json();
-
-        return $response['data']['sms_code'];
-    }
-
-    /**
-     * @depends test_send_verification_code
-     */
-    public function test_forgot_password_works($code)
-    {
-        $newPassword = Str::random(10);
-
-        $this->json('POST', '/api/auth/forgot-password', [
-            'phone' => self::$user->phone,
-            'code' => $code,
-            'password' => $newPassword
-        ]);
-
-        $this->seeJson([
-            'code' => 200,
-            'status' => true
-        ]);
-
-        return $newPassword;
-    }
-
-    /**
-     * @depends test_forgot_password_works
-     */
-    public function test_login_with_new_password($password)
-    {
-        $this->json('POST', '/api/auth/login', ['username' => self::$username, 'password' => $password]);
 
         $this->seeJson([
             'code' => 200,

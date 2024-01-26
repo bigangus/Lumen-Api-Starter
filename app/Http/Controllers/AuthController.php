@@ -135,10 +135,7 @@ class AuthController extends Controller
 
         $request->session()->put('sms_code', ['value' => $smsCode, 'expires_at' => Carbon::now()->addSeconds(60)]);
 
-        return HttpResponse::success('SMS code sent successfully, expires after 60 seconds', [
-            'sms_code' => $smsCode,
-            'expires_at' => Carbon::now()->addSeconds(60)->format('Y-m-d H:i:s')
-        ]);
+        return HttpResponse::success('SMS code sent successfully, expires after 60 seconds');
     }
 
     /**
