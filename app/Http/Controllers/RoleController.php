@@ -39,10 +39,16 @@ class RoleController extends Controller
         ]);
     }
 
+    /**
+     * @throws ValidationException
+     */
     public function update(Request $request): Response
     {
-        // TODO: Implement update() method.
-        return HttpResponse::success('Role Updated');
+        $this->validate($request, [
+            'name' => 'required|string',
+            'new_name' => 'nullable|string',
+            'permissions' => 'nullable|array'
+        ]);
     }
 
     public function delete(Request $request): Response
