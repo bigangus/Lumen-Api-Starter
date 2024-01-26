@@ -27,3 +27,10 @@ if (!function_exists('format_permissions')) {
         });
     }
 }
+
+if (!function_exists('is_subset')) {
+    function is_subset($subset, $set): bool
+    {
+        return empty(array_diff($subset, $set));
+    }
+}
