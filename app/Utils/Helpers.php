@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Collection;
+
 if (!function_exists('find_child')) {
     function find_child($root, $id)
     {
@@ -11,5 +13,17 @@ if (!function_exists('find_child')) {
             }
         }
         return null;
+    }
+}
+
+if (!function_exists('format_permissions')) {
+    function format_permissions(Collection $collection): Collection
+    {
+        return $collection->map(function($item) {
+            return [
+                'name' => $item['name'],
+                'translation' => __($item['name'])
+            ];
+        });
     }
 }

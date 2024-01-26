@@ -32,5 +32,8 @@ $router->group(['prefix' => 'api'], function() use ($router) {
 
     $router->group(['prefix' => 'permission', 'middleware' => ['auth:api', 'acl']], function () use ($router) {
         $router->post('list', 'PermissionController@list');
+        $router->post('add', 'PermissionController@add');
+        $router->post('remove', 'PermissionController@remove');
+        $router->post('get', 'PermissionController@get');
     });
 });
