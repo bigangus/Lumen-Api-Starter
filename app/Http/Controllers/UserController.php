@@ -63,6 +63,10 @@ class UserController extends Controller
             return HttpResponse::error('User not found');
         }
 
+        if (!Auth::user()->canEditThatUser($user->id)) {
+            return HttpResponse::error('You do not have permission to edit this user');
+        }
+
         if ($request->has('phone')) {
             $user->phone = $request->input('phone');
         }
